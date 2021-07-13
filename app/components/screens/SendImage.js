@@ -6,6 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
+import SearchableDropdown from 'react-native-searchable-dropdown';
 
 
 const allWidth = Dimensions.get('window').width;
@@ -39,6 +40,8 @@ const SendImage = ({route}) => {
     const [customers,setCustomers] = useState([{name:'انتخاب بیمه گذار',id:'0'}]);
     const [progressText,setProgressText] = useState('در حال ارسال');
     const [pillowImage,setPillowImage] = useState(false);
+    const [selectedItems,setSelectedItems] = useState({id:0,name:''});
+
     useEffect(() => {
         async function checkPerms(){
             if (Platform.OS != 'web') {
@@ -122,7 +125,7 @@ const SendImage = ({route}) => {
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
+            allowsEditing: false,
 
             quality: 1
         });
@@ -260,17 +263,49 @@ const SendImage = ({route}) => {
 
             </Modal>
             <Button style={styles.btnAddImage} title="اضافه کردن تصویر" onPress={selectImage} />
-            <Picker
-                selectedValue={selectedValue}                
-                style={styles.PickerBox}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-            >
-                { customers.map(item=>{
-                        return <Picker.Item key={item.id} label={item.name} value={item.id} />
-                })}
-                
-                
-            </Picker>
+            <SearchableDropdown
+            
+                selectedItems={selectedItems}
+                onItemSelect={(item) => {setSelectedValue(item.id); setSelectedItems(item)}}
+                //onItemSelect called after the selection from the dropdown
+                containerStyle={{ padding: 5 }}
+                //suggestion container style
+                textInputStyle={{
+                    //inserted text style
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    backgroundColor: '#FAF7F6',
+                }}
+                itemStyle={{
+                    //single dropdown item style
+                    padding: 10,
+                    marginTop: 2,
+                    backgroundColor: '#FAF9F8',
+                    borderColor: '#bbb',
+                    borderWidth: 1,
+                }}
+                itemTextStyle={{
+                    //text style of a single dropdown item
+                    color: '#222',
+                }}
+                itemsContainerStyle={{
+                    //items container style you can pass maxHeight
+                    //to restrict the items dropdown hieght
+                    maxHeight: '60%',
+                }}
+                items={customers}
+                //mapping of item array
+                defaultIndex={0}
+                //default selected item index
+                placeholder="برای انتخاب بیمه گذار کلیک کنید"
+                //place holder for the search input
+                resetValue={false}
+                //reset textInput Value with true and false state
+                underlineColorAndroid="transparent"
+                //To remove the underline from the android input
+            />
+
             <ScrollView style={styles.viewScrollView}>
                 {arrImages.map((item) =>
                 (

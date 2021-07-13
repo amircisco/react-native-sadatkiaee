@@ -33,7 +33,7 @@ const HomeMenu = ({ navigation,route}) => {
             <View>
                 <View style={styles.rowItem}>
                     <TouchableOpacity onPress={() => navigation.navigate('newUser')}>
-                        <Text style={styles.meniItem}>ثبت اطلاعات بیمه گزار جدید</Text>
+                        <Text style={styles.meniItem}>ثبت اطلاعات بیمه گذار جدید</Text>
                     </TouchableOpacity>
                 </View>                
                 <View style={styles.rowItem}>

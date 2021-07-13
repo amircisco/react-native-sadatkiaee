@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Modal,ActivityIndicator, StyleSheet, Text, View, ImageBackground, Alert, Platform, Button, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
-import {Picker} from '@react-native-community/picker'
+import { Modal,ActivityIndicator, StyleSheet, Text, View, ImageBackground, Alert, Platform, Button, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import * as Network from 'expo-network';
 
 
 const allWidth = Dimensions.get('window').width;
@@ -26,7 +27,7 @@ const current_datetime = (seprator) => {
 
 
 const SendDocuments = ({route}) => {
-    const serverport =  "http://192.168.42.95:8000";    
+    let serverport =  "";    
     const [arrImages, setArrImages] = useState([]); 
     const [modalVisible, setModalVisible] = useState(false);
     const [currentIndex,setCurrentIndex] = useState(null);
@@ -42,6 +43,8 @@ const SendDocuments = ({route}) => {
     const [customers,setCustomers] = useState([{name:'انتخاب بیمه گذار',id:'0'}]);
     const [progressText,setProgressText] = useState('در حال ارسال');
     const [pillowImage,setPillowImage] = useState(false);
+    const [selectedItems,setSelectedItems] = useState({id:0,name:''});
+
     useEffect(() => {
         async function checkPerms(){
             if (Platform.OS != 'web') {
@@ -51,32 +54,47 @@ const SendDocuments = ({route}) => {
                 }
             }
         }
-
-        async function getList() {
-            let token = await AsyncStorage.getItem('access')
-            axios.get(serverport+"/api/bazdidkhodro/insurer_list/",{headers: {'Authorization':'Bearer '+token}}
-            )
-            .then(response=>{
-                if(response.data.results!=="undefined" && Array.isArray(response.data.results)){
-                    let count = response.data.count;
-                    let newData = [...customers];
-                    response.data.results.map(item=>{
-                        newData.push({id:item.id,name:item.name+"("+item.mobile+") "});
-                    });
-                    setCustomers(newData);
-                }
-            })
-            .catch(error=>{
-                console.log(error)
-                Alert.alert("ارتباط با سرور برقرار نشد");
-            });
-        }
-        
         checkPerms();
-        getList();
+        check_local_network();
     }, []);
 
 
+    async function getList() {
+        let token = await AsyncStorage.getItem('access')
+        axios.get(serverport+"/api/bazdidkhodro/insurer_list/",{headers: {'Authorization':'Bearer '+token}}
+        )
+        .then(response=>{
+            if(response.data.results!=="undefined" && Array.isArray(response.data.results)){
+                let count = response.data.count;
+                let newData = [...customers];
+                response.data.results.map(item=>{
+                    newData.push({id:item.id,name:item.name+"("+item.mobile+") "});
+                });
+                setCustomers(newData);
+            }
+        })
+        .catch(error=>{
+            console.log(error)
+            Alert.alert("ارتباط با سرور برقرار نشد");
+        });
+    }
+
+    const check_local_network = async () => {
+        let ip_local = "";
+        ip_local = await Network.getIpAddressAsync();
+        if(ip_local==""){
+            Alert.alert("شما به شبکه داخلی وصل نیستید");
+        }
+        else{
+            let arr_ip = ip_local.split(".");
+            if(arr_ip.length == 4 && parseInt(arr_ip[0]) > 0) {                            
+                serverport = 'http://'+arr_ip[0].toString()+'.'+arr_ip[1].toString()+'.'+arr_ip[2].toString()+'.10:8000';                
+                //console.log(serverport);
+                getList();
+            } 
+            
+        }
+    }
 
     const removeFromArrImages = (id) => {
         let newArrImages = arrImages.filter((item) => {
@@ -125,8 +143,7 @@ const SendDocuments = ({route}) => {
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-
+            allowsEditing: false,
             quality: 1
         });
 
@@ -262,17 +279,48 @@ const SendDocuments = ({route}) => {
 
             </Modal>
             <Button style={styles.btnAddImage} title="اضافه کردن فایل" onPress={selectImage} />
-            <Picker
-                selectedValue={selectedValue}                
-                style={styles.PickerBox}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-            >
-                { customers.map(item=>{
-                        return <Picker.Item key={item.id} label={item.name} value={item.id} />
-                })}
-                
-                
-            </Picker>
+            <SearchableDropdown
+            
+                selectedItems={selectedItems}
+                onItemSelect={(item) => {setSelectedValue(item.id); setSelectedItems(item)}}
+                //onItemSelect called after the selection from the dropdown
+                containerStyle={{ padding: 5 }}
+                //suggestion container style
+                textInputStyle={{
+                    //inserted text style
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    backgroundColor: '#FAF7F6',
+                }}
+                itemStyle={{
+                    //single dropdown item style
+                    padding: 10,
+                    marginTop: 2,
+                    backgroundColor: '#FAF9F8',
+                    borderColor: '#bbb',
+                    borderWidth: 1,
+                }}
+                itemTextStyle={{
+                    //text style of a single dropdown item
+                    color: '#222',
+                }}
+                itemsContainerStyle={{
+                    //items container style you can pass maxHeight
+                    //to restrict the items dropdown hieght
+                    maxHeight: '60%',
+                }}
+                items={customers}
+                //mapping of item array
+                defaultIndex={0}
+                //default selected item index
+                placeholder="برای انتخاب بیمه گذار کلیک کنید"
+                //place holder for the search input
+                resetValue={false}
+                //reset textInput Value with true and false state
+                underlineColorAndroid="transparent"
+                //To remove the underline from the android input
+            />
             <ScrollView style={styles.viewScrollView}>
                 {arrImages.map((item) =>
                 (

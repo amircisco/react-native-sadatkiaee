@@ -12,18 +12,12 @@ import Login from './Login'
 import CustomHeader from './CustomHeader';
 
 
-const Stack = createStackNavigator();
-const __DEBUG__ = true;
-let server = "";
-let port=""; 
-if (__DEBUG__){
-    server = "http://192.168.42.95";
-    port = '8000';    
-}
-else{
-    server = "https://sadat-kiaee.ir";
-    port = '443';
-}
+const Stack = createStackNavigator(); 
+const server = "http://192.168.43.10";
+const port = '8000';    
+
+//const server = "http://sadat-kiaee.ir";
+//const port = '443';
 
 const SERVER = server;
 const PORT = port;
