@@ -13,11 +13,11 @@ import CustomHeader from './CustomHeader';
 
 
 const Stack = createStackNavigator(); 
-const server = "http://192.168.43.10";
+const server = "http://192.168.43.90";
 const port = '8000';    
 
-//const server = "http://sadat-kiaee.ir";
-//const port = '443';
+//const server = "sadatkiaee.dd-ns.ir";
+//const port = '80';
 
 const SERVER = server;
 const PORT = port;

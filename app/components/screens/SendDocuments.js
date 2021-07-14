@@ -88,7 +88,7 @@ const SendDocuments = ({route}) => {
         else{
             let arr_ip = ip_local.split(".");
             if(arr_ip.length == 4 && parseInt(arr_ip[0]) > 0) {                            
-                serverport = 'http://'+arr_ip[0].toString()+'.'+arr_ip[1].toString()+'.'+arr_ip[2].toString()+'.10:8000';                
+                serverport = 'http://'+arr_ip[0].toString()+'.'+arr_ip[1].toString()+'.'+arr_ip[2].toString()+'.90:8000';                
                 //console.log(serverport);
                 getList();
             } 
