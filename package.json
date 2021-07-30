@@ -31,7 +31,9 @@
     "react-native-screens": "~2.15.2",
     "react-native-searchable-dropdown": "^1.1.3",
     "react-native-simple-dialogs": "^1.4.0",
-    "react-native-web": "~0.13.12"
+    "react-native-super-grid": "^4.1.3",
+    "react-native-web": "~0.13.12",
+    "react-native-webview": "11.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

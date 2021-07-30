@@ -24,6 +24,7 @@ const Login = ({ route }) => {
                 startFetch(url,headers,data).then((respons) => {
                     if(respons.data.access !== undefined){
                         storeData('access',respons.data.access)
+                        storeData('groups',respons.data.groups[0])
                         route.params.setIsLogin(true);
                     }
                 });
@@ -45,7 +46,8 @@ const Login = ({ route }) => {
                     storeData('mobile',mobile);
                     storeData('password',password);
                     storeData('refresh',respons.data.refresh);
-                    storeData('access',respons.data.access);                    
+                    storeData('access',respons.data.access);         
+                    storeData('groups',respons.data.groups[0])           
                     route.params.setIsLogin(true);
                 }
                 else{
