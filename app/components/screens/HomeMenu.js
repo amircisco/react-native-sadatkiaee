@@ -7,16 +7,18 @@ import axios from 'axios'
 
 
 const HomeMenu = ({ navigation, route }) => {
+    
     const serverport = route.params.SERVERINFO.SERVERPORT;
     const colors = [ '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', '#c0392b',          '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', ];
     const [menuItems, setMenuItems] = useState([]);
 
-    const menuItemClicked = (isLink,navigate,link) => {
+    const menuItemClicked = async (isLink,navigate,link,id) => {
+        AsyncStorage.setItem("lastWebViewId",id.toString());
         if(isLink==1){
-            navigation.navigate('webView',{url:link})
+            navigation.navigate('webView',{url:link, isLink:isLink, id:id})
         }
         else if(isLink==0){
-            navigation.navigate(navigate)
+            navigation.navigate(navigate, {isLink:isLink})
         }
     }  
     const [mobile, setMobile] = useState('');
@@ -30,36 +32,34 @@ const HomeMenu = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        navigation.addListener('focus', payload => {
+            route.params.blur(true);
+        });
+
         const initMobileData = async () => {
             let grps = await AsyncStorage.getItem("groups")
             const value = await AsyncStorage.getItem("mobile")
-            if (value != "" && value != null && grps != "" && grps != null)
+            if (value != "" && value != null && grps != "" && grps != null){
                 if(grps=="employee"){
                     grps = "کارمند";
-                    getMenus();
                 }
                 else if(grps=="visitor"){
                     grps = "بازدید کننده";
-                    let newMenuItems = [...menuItems,
-                        { name: 'ثبت اطلاعات بیمه گذار جدید',isLink:0, navigate:'newUser', link:''},
-                        { name: 'بازدید جدید',isLink:0, navigate:'sendImage', link:''},
-                        { name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
-                       // { name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
-                    ];
-                    setMenuItems(newMenuItems);
                 }
+                
                 else if(grps=="admin" || grps=="superuser" || grps=="administrator"){
                     grps = "مدیر";
-                    let oldMenuItems = [...menuItems,
-                        { name: 'ثبت اطلاعات بیمه گذار جدید',isLink:0, navigate:'newUser', link:''},
-                        { name: 'بازدید جدید',isLink:0, navigate:'sendImage', link:''},
-                        { name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
-                       // { name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
-                    ];
-                                  
-                    getMenus(oldMenuItems)                        
                 }
+
+                let oldMenuItems = [...menuItems,
+                    {id:-1, name: 'ثبت اطلاعات بیمه گذار جدید',isLink:0, navigate:'newUser', link:''},
+                    {id:-2, name: 'بازدید جدید',isLink:0, navigate:'sendImage', link:''},
+                    {id:-3, name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
+                    // { name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
+                ];                
+                getMenus(oldMenuItems)
                 setMobile(value+ " - " + grps)
+            }
         }
 
         const getMenus = async (oldMenuItems=[]) => { 
@@ -70,6 +70,7 @@ const HomeMenu = ({ navigation, route }) => {
                     let newMenuItems = oldMenuItems;
                     respons.data.results.map((item)=>{
                         let obj = {};
+                        obj.id = item.id;
                         obj.name = item.name;
                         obj.link = item.link;
                         obj.isLink = item.isLink;
@@ -84,7 +85,9 @@ const HomeMenu = ({ navigation, route }) => {
             });
         }
         initMobileData()
-        
+        return () => {
+            navigation.removeListener('focus');
+        }
 
     },[null])
     return (
@@ -103,7 +106,7 @@ const HomeMenu = ({ navigation, route }) => {
                 // fixed
                 spacing={10}
                 renderItem={({ index,item }) => (
-                    <TouchableOpacity onPress={()=>{menuItemClicked(item.isLink,item.navigate,item.link)}} activeOpacity={0.5}  style={[styles.itemContainer, { backgroundColor: colors[index] }]}>
+                    <TouchableOpacity onPress={()=>{menuItemClicked(item.isLink,item.navigate,item.link,item.id)}} activeOpacity={0.5}  style={[styles.itemContainer, { backgroundColor: colors[index] }]}>
                         <Text  style={styles.itemName}>{item.name}</Text>
                     </TouchableOpacity >
                     

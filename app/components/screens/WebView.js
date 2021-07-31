@@ -4,7 +4,7 @@ import { StyleSheet, View, ActivityIndicator, Dimensions } from 'react-native';
 //import Loading from './Loading'
 
 
-const WebViewComponent = ({ route }) => {
+const WebViewComponent = ({ navigation, route }) => {
     const Loading = () => {
         const all_width = Dimensions.get('window').width;
         const all_height = Dimensions.get('window').height;
@@ -13,7 +13,7 @@ const WebViewComponent = ({ route }) => {
             <ActivityIndicator style={styles.loading}
                 size="large"
                 color="#bc2b78"
-                style={{width:all_width,height:all_height,justifyContent: 'center',alignItems: 'center',}}>
+                style={{ width: all_width, height: all_height, justifyContent: 'center', alignItems: 'center', }}>
             </ActivityIndicator>
 
         );
