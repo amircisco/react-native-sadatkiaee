@@ -79,9 +79,13 @@ const HomeMenu = ({ navigation, route }) => {
                     });
                     setMenuItems(newMenuItems);
                 }
+                else{
+                    setMenuItems(oldMenuItems);
+                }
             }).
             catch((error) => {
-                    console.log(error)                
+                setMenuItems(oldMenuItems);
+                console.log(error)                
             });
         }
         initMobileData()

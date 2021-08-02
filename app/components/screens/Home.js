@@ -16,11 +16,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Stack = createStackNavigator();
-const server = "http://192.168.43.84";
-const port = '8000';
+//const server = "http://192.168.43.84";
+//const port = '8000';
 
-//const server = "sadatkiaee.dd-ns.ir";
-//const port = '80';
+const server = "https://sadat-kiaee.ir";
+const port = '443';
 
 const SERVER = server;
 const PORT = port;
