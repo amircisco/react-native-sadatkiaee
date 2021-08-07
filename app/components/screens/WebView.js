@@ -1,11 +1,40 @@
 import * as React from 'react';
 import { WebView } from 'react-native-webview';
-import { StyleSheet, View, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Dimensions, Alert } from 'react-native';
 //import Loading from './Loading'
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const WebViewComponent = ({ navigation, route }) => {
-    const Loading = () => {
+    const [kosarUsername, setKosarUsername] = useState('');
+    const [kosarPassword, setKosarPassword] = useState('');
+    const [innerhtml, setInnerhtml] = useState('شما اجازه دسترسی به بیمه مرکزی را ندارید');
+    const url = "https://mdapp.kins.ir"; // route.params.url;
+    
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const ku = await AsyncStorage.getItem("kosar_username");                
+                const kp = await AsyncStorage.getItem("kosar_password");
+                if (ku.length > 0 && kp.length > 0) {
+                    setKosarUsername(ku);
+                    setKosarPassword(kp);
+                    setInnerhtml(" برای ورود اتوماتیک به سیستم اینجا کلیک کنید");
+                }
+                else {
+                    Alert.alert('شما اجازه دسترسی به بیمه مرکزی را ندارید');
+                }
+            }
+            catch(e){
+                Alert.alert('شما اجازه دسترسی به بیمه مرکزی را ندارید');
+            }
+            
+        }
+        getData();
+    },[null]);
+    
+    const Loading = () => {        
         const all_width = Dimensions.get('window').width;
         const all_height = Dimensions.get('window').height;
         return (
@@ -18,7 +47,8 @@ const WebViewComponent = ({ navigation, route }) => {
 
         );
     }
-    const url = route.params.url;
+
+
 
     return (
 
@@ -27,6 +57,22 @@ const WebViewComponent = ({ navigation, route }) => {
             originWhitelist={['*']}
             source={{ uri: url }}
             startInLoadingState={true}
+            javaScriptEnabledAndroid={true}
+            injectedJavaScript={`
+            if(document.querySelector("#username") != undefined && document.querySelector("#password") != undefined && document.querySelector(".btn1") != undefined ){
+                let btn = document.createElement("button");
+                btn.id = "btnaddinfo";
+                btn.style = "border:1px solid red;border-radius:10px;z-index:99999;width:84%;height:70%;position:fixed;top:15%;text-align:center;left:7%;padding:2%;font-size:80px;background-color:red;color:white;";
+                btn.addEventListener("click", function(){
+                    document.querySelector("#username").value="${kosarUsername}";
+                    document.querySelector("#password").value="${kosarPassword}";            
+                    document.querySelector(".btn1").click();
+                    document.querySelector("#btnaddinfo").innerHTML  = "در حال ورود.لطفا صبر نمایید...";
+                });    
+                btn.innerHTML = "${innerhtml}";
+                document.body.appendChild(btn);
+            }
+            `}
             renderLoading={() => <Loading />}
         />
     );

@@ -55,7 +55,8 @@ const HomeMenu = ({ navigation, route }) => {
                     {id:-1, name: 'ثبت اطلاعات بیمه گذار جدید',isLink:0, navigate:'newUser', link:''},
                     {id:-2, name: 'بازدید جدید',isLink:0, navigate:'sendImage', link:''},
                     {id:-3, name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
-                    // { name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
+                    {id:-4, name: 'تنظیمات ورود',isLink:0, navigate:'infoLogin', link:''},
+                    //{ name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
                 ];                
                 getMenus(oldMenuItems)
                 setMobile(value+ " - " + grps)

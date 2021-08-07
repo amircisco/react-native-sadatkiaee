@@ -11,6 +11,7 @@ import SendDocuments from './SendDocuments';
 import Login from './Login'
 import CustomHeader from './CustomHeader';
 import WebView from './WebView';
+import InfoLogin from './InfoLogin';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -47,7 +48,9 @@ const Home = () => {
                 data : { id: lastWebViewId, action: 'enter' }
                 }).
                 then((response) => {
-
+                    if(parseInt(response.data.state)==100){
+                        removeAllConfigUser();
+                    }
                 }).
                 catch((error) => { console.log(error) });
         }
@@ -66,13 +69,35 @@ const Home = () => {
                     data: { id: lastWebViewId, action: 'leave'}
                 }).
                 then((response) => {
-
+                    if(parseInt(response.data.state)==100){
+                        removeAllConfigUser();
+                    }
                 }).
                 catch((error) => { console.log(error) });
         }
         if (setZiro)
             AsyncStorage.setItem("lastWebViewId","0");
         
+    }
+
+    const removeData = async (key) => {
+        try {
+            await AsyncStorage.removeItem(key)
+    
+        } catch (e) {
+            // saving error
+        }
+    }
+    
+    const removeAllConfigUser = () => {
+        removeData('mobile');
+        removeData('password');
+        removeData('access');
+        removeData('refresh');
+        removeData('groups');
+        removeData("kosar_username");
+        removeData("kosar_password");
+        setIsLogin(false);
     }
 
     useEffect(() => {
@@ -118,6 +143,7 @@ const Home = () => {
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید های من" /> }} name="mySendered" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={MySendered} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="تصاویر" /> }} name="showImages" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={ShowImages} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ارسال مدارک" /> }} name="sendDocuments" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={SendDocuments} />
+                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="تنظیمات ورود" /> }} name="infoLogin" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={InfoLogin} />
                     <Stack.Screen listeners={({ navigation, route }) => ({
                         focus: e => {
                             focus();
