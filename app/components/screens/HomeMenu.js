@@ -28,6 +28,8 @@ const HomeMenu = ({ navigation, route }) => {
         removeData('access');
         removeData('refresh');
         removeData('groups');
+        removeData("kosar_username");
+        removeData("kosar_password");
         route.params.setIsLogin(false);
     }
 

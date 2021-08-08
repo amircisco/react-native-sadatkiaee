@@ -35,28 +35,30 @@ const Home = () => {
     const [isLogin, setIsLogin] = useState(false);
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
-    const focus = async () => { 
+    const focus = async () => {
         let lastWebViewId = await AsyncStorage.getItem("lastWebViewId");
         lastWebViewId = parseInt(lastWebViewId);
         if (lastWebViewId > 0) {
             let token = await AsyncStorage.getItem('access');
-            
+
             axios({
                 url: SERVERPORT + "/api/bazdidkhodro/mobile_signal/",
-                method:'POST',
-                headers: { 'content-type':'application/json', 'Authorization': 'Bearer ' + token } ,
-                data : { id: lastWebViewId, action: 'enter' }
-                }).
+                method: 'POST',
+                headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token },
+                data: { id: lastWebViewId, action: 'enter' }
+            }).
                 then((response) => {
-                    if(parseInt(response.data.state)==100){
+                }).
+                catch((error) => {
+                    //console.log(error) 
+                    if (error.response.status === 401) {
                         removeAllConfigUser();
                     }
-                }).
-                catch((error) => { console.log(error) });
+                });
         }
     }
 
-    const blur = async (setZiro = false) => { 
+    const blur = async (setZiro = false) => {
         let lastWebViewId = await AsyncStorage.getItem("lastWebViewId");
         lastWebViewId = parseInt(lastWebViewId);
         if (lastWebViewId > 0) {
@@ -64,31 +66,34 @@ const Home = () => {
             axios(
                 {
                     url: SERVERPORT + "/api/bazdidkhodro/mobile_signal/",
-                    method:'POST',
-                    headers: { 'content-type':'application/json', 'Authorization': 'Bearer ' + token },
-                    data: { id: lastWebViewId, action: 'leave'}
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    data: { id: lastWebViewId, action: 'leave' }
                 }).
                 then((response) => {
-                    if(parseInt(response.data.state)==100){
+
+                }).
+                catch((error) => {
+                    //console.log(error)
+                    if (error.response.status === 401) {
                         removeAllConfigUser();
                     }
-                }).
-                catch((error) => { console.log(error) });
+                });
         }
         if (setZiro)
-            AsyncStorage.setItem("lastWebViewId","0");
-        
+            AsyncStorage.setItem("lastWebViewId", "0");
+
     }
 
     const removeData = async (key) => {
         try {
             await AsyncStorage.removeItem(key)
-    
+
         } catch (e) {
             // saving error
         }
     }
-    
+
     const removeAllConfigUser = () => {
         removeData('mobile');
         removeData('password');
@@ -137,7 +142,7 @@ const Home = () => {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="صفحه اصلی" /> }} name="homeMenu" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO,blur:blur }} component={HomeMenu} />
+                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="صفحه اصلی" /> }} name="homeMenu" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO, blur: blur }} component={HomeMenu} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ثبت بیمه گذار" /> }} name="newUser" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={NewUser} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید جدید" /> }} name="sendImage" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={SendImage} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید های من" /> }} name="mySendered" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={MySendered} />
