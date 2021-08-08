@@ -10,7 +10,7 @@ const WebViewComponent = ({ navigation, route }) => {
     const [kosarUsername, setKosarUsername] = useState('');
     const [kosarPassword, setKosarPassword] = useState('');
     const [innerhtml, setInnerhtml] = useState('شما اجازه دسترسی به بیمه مرکزی را ندارید');
-    const url = "https://mdapp.kins.ir"; // route.params.url;
+    const url = route.params.url;
     
     useEffect(() => {
         const getData = async () => {
