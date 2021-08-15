@@ -12,7 +12,6 @@ import Login from './Login'
 import CustomHeader from './CustomHeader';
 import WebView from './WebView';
 import TimeSheet from './TimeSheet';
-import DocumentArchive from './DocumentArchive';
 import InfoLogin from './InfoLogin';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -151,8 +150,7 @@ const Home = () => {
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="تصاویر" /> }} name="showImages" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={ShowImages} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ارسال مدارک" /> }} name="sendDocuments" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={SendDocuments} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="تنظیمات ورود" /> }} name="infoLogin" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={InfoLogin} />
-                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ثبت ساعت کاری" /> }} name="timeSheet" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={TimeSheet} />
-                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بایگانی" /> }} name="documentArchive" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={DocumentArchive} />
+                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ثبت ساعت کاری" /> }} name="timeSheet" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={TimeSheet} />                    
                     <Stack.Screen listeners={({ navigation, route }) => ({
                         focus: e => {
                             focus();

@@ -59,7 +59,6 @@ const HomeMenu = ({ navigation, route }) => {
                     {id:-3, name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
                     {id:-4, name: 'تنظیمات ورود',isLink:0, navigate:'infoLogin', link:''},
                     {id:-5, name: 'ثبت ساعت کاری',isLink:0, navigate:'timeSheet', link:''},
-                    {id:-5, name: 'بایگانی',isLink:0, navigate:'documentArchive', link:''},
                     //{ name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
                 ];                
                 getMenus(oldMenuItems)

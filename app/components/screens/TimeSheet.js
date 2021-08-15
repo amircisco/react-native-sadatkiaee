@@ -12,8 +12,7 @@ const TimeSheet = ({ navigation ,route }) => {
     const [enterTime, setEnterTime] = useState('');
     const [exitTime, setExitTime] = useState('');
     const [saveExit, setSaveExit] = useState(false);
-    const [ssid, setSsid] = useState('a');
-    const [bssid, setBssid] = useState('bc:34:00:12:ab:90');
+    //bc:34:00:12:ab:90
     const [accessDenied, setAccessDenied] = useState(false);
     const [finsihLoading,setFinsihLoading] = useState(false);
     const [durringProcess,setDurringProcess] = useState(false);
@@ -62,25 +61,23 @@ const TimeSheet = ({ navigation ,route }) => {
     }
     useEffect(() => {
 
-        NetInfo.fetch("wifi").then(state => {
-            if (state.details.ssid != undefined)
-                setSsid(state.details.ssid);
-            if (state.details.bssid != undefined)
-                setBssid(state.details.bssid);
-            if (ssid.length > 0 && bssid.length > 0) {
+        NetInfo.fetch("wifi").then(state => {   
+                 
+            if (state.details.bssid != undefined && state.details.ssid != undefined ) {                
                 const connect_to_server = async () => {
                     let token = await AsyncStorage.getItem('access');
                     axios({
                         url: serverport + "/api/timesheet/gettimesheet/",
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + token, 'content-type': 'application/json' },
-                        data: { "ssid": ssid, "bssid": bssid },
+                        data: { "ssid": state.details.ssid, "bssid": state.details.bssid },
                     }).
                         then((response) => {          
-                            if (response.status === 200 ) {
+                        
+                            if (response.status === 200 ) {                                
                                 setFinsihLoading(true);
-                                setCurrentDate(response.data.results[0].current_date);
-                                setEnterTime(response.data.results[0].enter_time);
+                                setCurrentDate(response.data.current_date);
+                                setEnterTime(response.data.enter_time);
                                 setStateType(2);
                             }
                             else if (response.status === 202) {
@@ -103,13 +100,17 @@ const TimeSheet = ({ navigation ,route }) => {
 
                 connect_to_server();
             }
+            else{
+                Alert.alert("اتصال خود را به شبکه دفتر بررسی نمایید");
+                navigation.navigate("homeMenu");
+            }
         });
 
     }, []);
 
     if (accessDenied) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text style={{ fontSize: '20px' }}>شما به شبکه اینترنت دفتر متصل نیستید</Text></View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text style={{ fontSize: 20 }}>شما به شبکه اینترنت دفتر متصل نیستید</Text></View>
         );
     }
     else if(accessDenied==false && finsihLoading) {
