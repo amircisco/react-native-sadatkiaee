@@ -70,7 +70,7 @@ const TimeSheet = ({ navigation ,route }) => {
                         url: serverport + "/api/timesheet/gettimesheet/",
                         method: 'POST',
                         headers: { 'Authorization': 'Bearer ' + token, 'content-type': 'application/json' },
-                        data: { "ssid": state.details.ssid, "bssid": state.details.bssid },
+                        data: { details:state.details},
                     }).
                         then((response) => {          
                         

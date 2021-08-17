@@ -10,13 +10,14 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-native-community/netinfo": "^6.0.0",
+    "@react-native-community/netinfo": "6.0.0",
     "@react-native-community/picker": "^1.8.1",
     "@react-navigation/native": "^5.9.2",
     "@react-navigation/stack": "^5.14.2",
     "axios": "^0.21.1",
     "crypto-js": "^4.1.1",
     "expo": "^42.0.0",
+    "expo-application": "^3.2.0",
     "expo-image-picker": "~10.2.2",
     "expo-location": "~12.1.2",
     "expo-network": "~3.2.0",
@@ -26,6 +27,7 @@
     "react-confirm-alert": "^2.7.0",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-android-wifi": "^0.0.41",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-image-picker": "^3.2.1",
     "react-native-network-info": "^5.2.1",
@@ -37,7 +39,8 @@
     "react-native-simple-dialogs": "^1.4.0",
     "react-native-super-grid": "^4.1.3",
     "react-native-web": "~0.13.12",
-    "react-native-webview": "11.6.2"
+    "react-native-webview": "11.6.2",
+    "react-native-wifi-reborn": "^4.3.8"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

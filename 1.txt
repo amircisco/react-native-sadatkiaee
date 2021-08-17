@@ -1,0 +1,9 @@
+Object {
+  "bssid": "02:1a:11:f3:6c:46",
+  "frequency": 2412,
+  "ipAddress": "192.168.43.33",
+  "isConnectionExpensive": true,
+  "ssid": "tbt",
+  "strength": 99,
+  "subnet": "255.255.255.0",
+}
