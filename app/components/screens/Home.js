@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, AppState } from 'react-native'
+import { StyleSheet, Text, View, AppState,Alert } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SendImage from './SendImage';
@@ -41,7 +41,7 @@ const Home = () => {
         lastWebViewId = parseInt(lastWebViewId);
         if (lastWebViewId > 0) {
             let token = await AsyncStorage.getItem('access');
-
+            
             axios({
                 url: SERVERPORT + "/api/bazdidkhodro/mobile_signal/",
                 method: 'POST',
@@ -49,9 +49,10 @@ const Home = () => {
                 data: { id: lastWebViewId, action: 'enter' }
             }).
                 then((response) => {
+
                 }).
-                catch((error) => {
-                    //console.log(error) 
+                catch((error) => {                    
+                    console.log(error) 
                     if (error.response.status === 401) {
                         removeAllConfigUser();
                     }

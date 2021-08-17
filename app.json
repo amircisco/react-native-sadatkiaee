@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.sadatakiaee.ir"
+      "package": "com.sadatakiaee.ir",
+      "permissions":["ACCESS_FINE_LOCATION","ACCESS_COARSE_LOCATION"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

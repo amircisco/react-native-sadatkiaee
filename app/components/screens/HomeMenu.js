@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, PermissionsAndroid,Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatGrid } from 'react-native-super-grid';
 import axios from 'axios'
@@ -7,21 +7,22 @@ import axios from 'axios'
 
 
 const HomeMenu = ({ navigation, route }) => {
-    
+
     const serverport = route.params.SERVERINFO.SERVERPORT;
-    const colors = [ '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', '#c0392b',          '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#f1c40f', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12', ];
+    const colors = ['#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9','#e67e22', '#e74c3c', '#95a5a6', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#e67e22', '#e74c3c', '#95a5a6', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12','#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9','#e67e22', '#e74c3c', '#95a5a6', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#e67e22', '#e74c3c', '#95a5a6', '#c0392b', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#2980b9', '#e67e22', '#e74c3c', '#95a5a6', '#f39c12'];
     const [menuItems, setMenuItems] = useState([]);
 
-    const menuItemClicked = async (isLink,navigate,link,id) => {
-        AsyncStorage.setItem("lastWebViewId",id.toString());
-        if(isLink==1){
-            navigation.navigate('webView',{url:link, isLink:isLink, id:id})
+    const menuItemClicked = async (isLink, navigate, link, id) => {
+        AsyncStorage.setItem("lastWebViewId", id.toString());
+        if (isLink == 1) {
+            navigation.navigate('webView', { url: link, isLink: isLink, id: id })
         }
-        else if(isLink==0){
-            navigation.navigate(navigate, {isLink:isLink})
+        else if (isLink == 0) {
+            navigation.navigate(navigate, { isLink: isLink })
         }
-    }  
+    }
     const [mobile, setMobile] = useState('');
+    
     const logOut = () => {
         removeData('mobile');
         removeData('password');
@@ -34,70 +35,72 @@ const HomeMenu = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        
         navigation.addListener('focus', payload => {
             route.params.blur(true);
         });
 
         const initMobileData = async () => {
-            let grps = await AsyncStorage.getItem("groups")
+            let grps = await AsyncStorage.getItem("groups") 
             const value = await AsyncStorage.getItem("mobile")
-            if (value != "" && value != null && grps != "" && grps != null){
-                if(grps=="employee"){
+            if (value != "" && value != null && grps != "" && grps != null) {
+                if (grps == "employee") {
                     grps = "کارمند";
                 }
-                else if(grps=="visitor"){
+                else if (grps == "visitor") {
                     grps = "بازدید کننده";
                 }
-                
-                else if(grps=="admin" || grps=="superuser" || grps=="administrator"){
+
+                else if (grps == "admin" || grps == "superuser" || grps == "administrator") {
                     grps = "مدیر";
                 }
 
                 let oldMenuItems = [...menuItems,
-                    {id:-1, name: 'ثبت اطلاعات بیمه گذار جدید',isLink:0, navigate:'newUser', link:''},
-                    {id:-2, name: 'بازدید جدید',isLink:0, navigate:'sendImage', link:''},
-                    {id:-3, name: 'بازدیدهای من',isLink:0, navigate:'mySendered', link:''},
-                    {id:-4, name: 'تنظیمات ورود',isLink:0, navigate:'infoLogin', link:''},
-                    {id:-5, name: 'ثبت ساعت کاری',isLink:0, navigate:'timeSheet', link:''},
+                { id: -1, name: 'ثبت اطلاعات بیمه گذار جدید', isLink: 0, navigate: 'newUser', link: '' },
+                { id: -2, name: 'بازدید جدید', isLink: 0, navigate: 'sendImage', link: '' },
+                { id: -3, name: 'بازدیدهای من', isLink: 0, navigate: 'mySendered', link: '' },
+                { id: -4, name: 'تنظیمات ورود', isLink: 0, navigate: 'infoLogin', link: '' },
+                { id: -5, name: 'ثبت ساعت کاری', isLink: 0, navigate: 'timeSheet', link: '' },
                     //{ name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
-                ];                
+                ];
                 getMenus(oldMenuItems)
-                setMobile(value+ " - " + grps)
+                setMobile(value + " - " + grps)
             }
+
         }
 
-        const getMenus = async (oldMenuItems=[]) => { 
+        const getMenus = async (oldMenuItems = []) => {
             let token = await AsyncStorage.getItem('access')
-            axios.get(serverport+"/api/bazdidkhodro/menu_items/",{headers: {'Authorization':'Bearer '+token}}).
-            then((respons) => {     
-                if(respons.status == 200 && respons.data.results.length > 0 ){
-                    let newMenuItems = oldMenuItems;
-                    respons.data.results.map((item)=>{
-                        let obj = {};
-                        obj.id = item.id;
-                        obj.name = item.name;
-                        obj.link = item.link;
-                        obj.isLink = item.isLink;
-                        obj.navigate = item.navigate;
-                        newMenuItems.push(obj);
-                    });
-                    setMenuItems(newMenuItems);
-                }
-                else{
+            axios.get(serverport + "/api/bazdidkhodro/menu_items/", { headers: { 'Authorization': 'Bearer ' + token } }).
+                then((respons) => {
+                    if (respons.status == 200 && respons.data.results.length > 0) {
+                        let newMenuItems = oldMenuItems;
+                        respons.data.results.map((item) => {
+                            let obj = {};
+                            obj.id = item.id;
+                            obj.name = item.name;
+                            obj.link = item.link;
+                            obj.isLink = item.isLink;
+                            obj.navigate = item.navigate;
+                            newMenuItems.push(obj);
+                        });
+                        setMenuItems(newMenuItems);
+                    }
+                    else {
+                        setMenuItems(oldMenuItems);
+                    }
+                }).
+                catch((error) => {
                     setMenuItems(oldMenuItems);
-                }
-            }).
-            catch((error) => {
-                setMenuItems(oldMenuItems);
-                console.log(error)                
-            });
+                    console.log(error)
+                });
         }
         initMobileData()
         return () => {
             navigation.removeListener('focus');
         }
 
-    },[null])
+    }, [null])
     return (
         <View style={styles.container}>
 
@@ -113,11 +116,11 @@ const HomeMenu = ({ navigation, route }) => {
                 // staticDimension={300}
                 // fixed
                 spacing={10}
-                renderItem={({ index,item }) => (
-                    <TouchableOpacity onPress={()=>{menuItemClicked(item.isLink,item.navigate,item.link,item.id)}} activeOpacity={0.5}  style={[styles.itemContainer, { backgroundColor: colors[index] }]}>
-                        <Text  style={styles.itemName}>{item.name}</Text>
+                renderItem={({ index, item }) => (
+                    <TouchableOpacity onPress={() => { menuItemClicked(item.isLink, item.navigate, item.link, item.id) }} activeOpacity={0.5} style={[styles.itemContainer, { backgroundColor: colors[index] }]}>
+                        <Text style={styles.itemName}>{item.name}</Text>
                     </TouchableOpacity >
-                    
+
                 )}
             />
 
@@ -182,21 +185,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     gridView: {
-        
+
         flex: 1,
-      },
-      itemContainer: {
+    },
+    itemContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
         padding: 10,
         height: 150,
-      },
-      itemName: {
+    },
+    itemName: {
         fontSize: 16,
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'bold',
-        
-      },    
+
+    },
 })

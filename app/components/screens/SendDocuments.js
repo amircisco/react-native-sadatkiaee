@@ -6,7 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
 import SearchableDropdown from 'react-native-searchable-dropdown';
-import * as Network from 'expo-network';
+
 
 
 const allWidth = Dimensions.get('window').width;
@@ -81,7 +81,7 @@ const SendDocuments = ({route}) => {
 
     const check_local_network = async () => {
         let ip_local = "";
-        ip_local = await Network.getIpAddressAsync();
+        
         if(ip_local==""){
             Alert.alert("شما به شبکه داخلی وصل نیستید");
         }

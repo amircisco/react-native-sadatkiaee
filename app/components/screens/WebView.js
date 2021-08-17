@@ -24,10 +24,12 @@ const WebViewComponent = ({ navigation, route }) => {
                 }
                 else {
                     Alert.alert('شما اجازه دسترسی به بیمه مرکزی را ندارید');
+                    navigation.navigate("homeMenu");
                 }
             }
             catch(e){
                 Alert.alert('شما اجازه دسترسی به بیمه مرکزی را ندارید');
+                navigation.navigate("homeMenu");
             }
             
         }
