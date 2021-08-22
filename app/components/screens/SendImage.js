@@ -1,6 +1,5 @@
 import React, { useState, useEffect,useCallback } from 'react'
 import { Modal,ActivityIndicator, StyleSheet, Text, View, ImageBackground, Alert, Platform, Button, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
-import {Picker} from '@react-native-community/picker'
 import * as ImagePicker from 'expo-image-picker';
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';

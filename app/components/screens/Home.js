@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, AppState,Alert } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import SendImage from './SendImage';
+import Img from './Img';
 import HomeMenu from './HomeMenu';
 import NewUser from './NewUser';
 import MySendered from './MySendered';
@@ -145,8 +145,8 @@ const Home = () => {
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="صفحه اصلی" /> }} name="homeMenu" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO, blur: blur }} component={HomeMenu} />
-                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ثبت بیمه گذار" /> }} name="newUser" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={NewUser} />
-                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید جدید" /> }} name="sendImage" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={SendImage} />
+                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ثبت بیمه گذار" /> }} name="newUser" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={NewUser} />                    
+                    <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید جدید" /> }} name="img" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={Img} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="بازدید های من" /> }} name="mySendered" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={MySendered} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="تصاویر" /> }} name="showImages" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={ShowImages} />
                     <Stack.Screen options={{ headerStyle: { backgroundColor: 'orange' }, headerTitle: () => <CustomHeader textHeader="ارسال مدارک" /> }} name="sendDocuments" initialParams={{ setIsLogin: setIsLogin, SERVERINFO: SERVERINFO }} component={SendDocuments} />

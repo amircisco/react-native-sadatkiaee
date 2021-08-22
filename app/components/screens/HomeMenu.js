@@ -22,7 +22,9 @@ const HomeMenu = ({ navigation, route }) => {
         }
     }
     const [mobile, setMobile] = useState('');
-    
+    const refresh = () => {
+        route.params.setIsLogin(false);   
+    }
     const logOut = () => {
         removeData('mobile');
         removeData('password');
@@ -56,11 +58,11 @@ const HomeMenu = ({ navigation, route }) => {
                 }
 
                 let oldMenuItems = [...menuItems,
-                { id: -1, name: 'ثبت اطلاعات بیمه گذار جدید', isLink: 0, navigate: 'newUser', link: '' },
-                { id: -2, name: 'بازدید جدید', isLink: 0, navigate: 'sendImage', link: '' },
-                { id: -3, name: 'بازدیدهای من', isLink: 0, navigate: 'mySendered', link: '' },
-                { id: -4, name: 'تنظیمات ورود', isLink: 0, navigate: 'infoLogin', link: '' },
-                { id: -5, name: 'ثبت ساعت کاری', isLink: 0, navigate: 'timeSheet', link: '' },
+                //{ id: -1, name: 'ثبت اطلاعات بیمه گذار جدید', isLink: 0, navigate: 'newUser', link: '' },
+                { id: -1, name: 'بازدید جدید', isLink: 0, navigate: 'img', link: '' },
+                //{ id: -2, name: 'بازدیدهای من', isLink: 0, navigate: 'mySendered', link: '' },
+                { id: -2, name: 'تنظیمات ورود', isLink: 0, navigate: 'infoLogin', link: '' },
+                { id: -3, name: 'ثبت ساعت کاری', isLink: 0, navigate: 'timeSheet', link: '' },
                     //{ name: 'ارسال مدارک',isLink:0, navigate:'sendDocuments', link:''},                       
                 ];
                 getMenus(oldMenuItems)
@@ -85,6 +87,7 @@ const HomeMenu = ({ navigation, route }) => {
                             newMenuItems.push(obj);
                         });
                         setMenuItems(newMenuItems);
+                        
                     }
                     else {
                         setMenuItems(oldMenuItems);
@@ -106,6 +109,7 @@ const HomeMenu = ({ navigation, route }) => {
 
             <View style={styles.navProfile}>
                 <TouchableOpacity onPress={logOut} style={styles.navProfileBtn} ><Text style={styles.navProfileBtnText}>خروج</Text></TouchableOpacity>
+                <TouchableOpacity onPress={refresh} style={styles.navProfileBtnR} ><Text style={styles.navProfileBtnText}>نوسازی</Text></TouchableOpacity>
                 <Text style={styles.navProfileMobile}>{mobile}</Text>
             </View>
 
@@ -170,6 +174,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
         padding: 5,
         borderRadius: 6,
+    },
+    navProfileBtnR:{
+        flex: 0.2,
+        alignSelf: 'flex-start',
+        backgroundColor: 'blue',
+        padding: 5,
+        marginLeft: 5,
+        borderRadius: 6,        
     },
     navProfileBtnText: {
         textAlign: 'center',

@@ -1532,7 +1532,7 @@
 
 "@react-native-community/picker@^1.8.1":
   version "1.8.1"
-  resolved "https://registry.npmjs.org/@react-native-community/picker/-/picker-1.8.1.tgz"
+  resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.8.1.tgz#94f14f0aad98fa7592967b941be97deec95c3805"
   integrity sha512-Sj9DzX1CSnmYiuEQ5fQhExoo4XjSKoZkqLPAAybycq6RHtCuWppf+eJXRMCOJki25BlKSSt+qVqg0fIe//ujNQ==
 
 "@react-navigation/core@^5.15.5":
@@ -2749,12 +2749,21 @@ expo-constants@~11.0.1:
     expo-modules-core "~0.2.0"
     uuid "^3.3.2"
 
+expo-document-picker@~9.2.4:
+  version "9.2.4"
+  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-9.2.4.tgz#8323ba2fcc62039ba2b31d0314aefd42ad48b7e7"
+  integrity sha512-j8hmk1LqGVRpYbjMVsg26DOcBo8B1r5/SpLfNNb9X8AiPx7ceQ5HC3kC0BFwk+Ad2/NHHRQ4jFQFnkvMuDkhEg==
+  dependencies:
+    "@expo/config-plugins" "^3.0.0"
+    expo-modules-core "~0.2.0"
+    uuid "^3.3.2"
+
 expo-error-recovery@~2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/expo-error-recovery/-/expo-error-recovery-2.2.0.tgz"
   integrity sha512-HKbu6VHAlfhoP7y+HaGJwJizoUTY2eBTBHAi1RE7l/r4sc+cAegTmwwqf/3AOR8C7VntDvuQKtW7NZIyA+62KQ==
 
-expo-file-system@~11.1.3:
+expo-file-system@^11.1.3, expo-file-system@~11.1.3:
   version "11.1.3"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-11.1.3.tgz"
   integrity sha512-FBRcD6ojrkrZiTZ8O7Fbo833HhZtkhKtLDj4RNZIMpF1i+ZBD2bmeMcfLMeRHNYcBeJno9C4AVXoNQFqDCGQDg==
@@ -2785,6 +2794,14 @@ expo-keep-awake@~9.2.0:
   version "9.2.0"
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-9.2.0.tgz"
   integrity sha512-R5jAx5j3MqrhKFB307FBpaHtYSYeVIFX/rVforBF5inKonYjXRWVhjGoBjolF4geAryNamC3NKhMfxyaaB0W6Q==
+
+expo-media-library@^12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-12.1.2.tgz#7a152f5ddf9e5e55d07aa28c8a5bd04113c0ebd2"
+  integrity sha512-e2Wh3TD4N2JjmKFFiQ453QgWWARNqc1/vILkEVnxjs34uJmUoT4a89wromr6Xl2fZJUvJDmgmVmL+A9iBWFgaA==
+  dependencies:
+    "@expo/config-plugins" "^3.0.0"
+    expo-modules-core "~0.2.0"
 
 expo-modules-autolinking@^0.0.3:
   version "0.0.3"
@@ -4852,6 +4869,13 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-document-picker@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-6.0.4.tgz#21cbe2b3e8a1aff4aafcb81e06f09494b45e62f8"
+  integrity sha512-qFKf76M1VyiVqZscqND8wDcALfHG0BI77mJ4CzEdANqLiJUbwie7XOKtQlw5oRSAjLPgg9NjXnjbOFY3OmkIXQ==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native-gesture-handler@~1.10.2:
   version "1.10.3"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-1.10.3.tgz"
@@ -4911,6 +4935,11 @@ react-native-super-grid@^4.1.3:
   integrity sha512-Zgp+olHshuA/e/d+eyIP8JkdyxjC39SW6eIWHXmOATcJEQ8d0mKTOEVq+4rBvD6xMgceT45X0DF+H691LMy34g==
   dependencies:
     prop-types "^15.6.0"
+
+react-native-view-shot@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
+  integrity sha512-9u9fPtp6a52UMoZ/UCPrCjKZk8tnkI9To0Eh6yYnLKFEGkRZ7Chm6DqwDJbYJHeZrheCCopaD5oEOnRqhF4L2Q==
 
 react-native-web@~0.13.12:
   version "0.13.18"
