@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import FileSystem from 'expo-file-system';
 import ViewShot, { captureRef, releaseCapture } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
+import * as Localization from 'expo-localization';
 
 
 const allWidth = Dimensions.get('window').width;
@@ -19,6 +20,8 @@ const Img = ({ route }) => {
     const [lodingDialog, setLodingDialog] = useState(true);
     const [showProgressDialog, setShowProgressDialog] = useState(false);
     const refs = {};
+    const [fromLeft,setFromLeft] = useState('67%');
+    const [fromBottom,setFromBottom] = useState('18%');
     const updateRef = (index, el) => {
         let key = "key_" + index.toString();
         refs[key] = el;
@@ -68,6 +71,10 @@ const Img = ({ route }) => {
     }
 
     useEffect(() => {
+        console.log(Localization.isRTL);
+        if(Localization.isRTL){
+            setFromLeft("-"+fromLeft);
+        }
         setCurrentDate(current_datetime("/"));
         checkPerms();
     }, []);
@@ -132,7 +139,7 @@ const Img = ({ route }) => {
                             <ScrollView horizontal={true}>
                                 <ViewShot ref={el => updateRef(index, el)} style={{ width: 1024, height: 768 }}>
                                     <Image source={{ uri: item.data }} style={{ width: 1024, height: 768 }}></Image>
-                                    <Text style={{ fontSize: 32, color: "#e89520", position: 'relative', left: '69%', bottom: '15%', textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{currentDate}</Text>
+                                    <Text style={{ fontSize: 32, color: "#e89520", position: 'relative', left: fromLeft, bottom: fromBottom, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{currentDate}</Text>
                                 </ViewShot>
                             </ScrollView>
                         </ScrollView>
