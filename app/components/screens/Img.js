@@ -22,6 +22,11 @@ const Img = ({ route }) => {
     const refs = {};
     const [fromLeft,setFromLeft] = useState('67%');
     const [fromBottom,setFromBottom] = useState('18%');
+    const [fontDynamic,setFontDynamic] = useState(32);
+    // left 67%
+    // bottom 18%
+    // font 32
+    // font 25
     const updateRef = (index, el) => {
         let key = "key_" + index.toString();
         refs[key] = el;
@@ -71,7 +76,9 @@ const Img = ({ route }) => {
     }
 
     useEffect(() => {
-        console.log(Localization.isRTL);
+        if(allWidth > 360){
+            setFontDynamic(25);
+        }
         if(Localization.isRTL){
             setFromLeft("-"+fromLeft);
         }
@@ -139,7 +146,7 @@ const Img = ({ route }) => {
                             <ScrollView horizontal={true}>
                                 <ViewShot ref={el => updateRef(index, el)} style={{ width: 1024, height: 768 }}>
                                     <Image source={{ uri: item.data }} style={{ width: 1024, height: 768 }}></Image>
-                                    <Text style={{ fontSize: 32, color: "#e89520", position: 'relative', left: fromLeft, bottom: fromBottom, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{currentDate}</Text>
+                                    <Text style={{ fontSize: fontDynamic, color: "#e89520", position: 'relative', left: fromLeft, bottom: fromBottom, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{currentDate}</Text>
                                 </ViewShot>
                             </ScrollView>
                         </ScrollView>

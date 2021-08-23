@@ -187,14 +187,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: 16,
-        fontWeight: 'bold',
+        
     },
     navProfileMobile: {
         flex: 0.8,
         textAlign: 'right',
         alignSelf: 'flex-end',
         fontSize: 16,
-        fontWeight: 'bold',
+        
     },
     gridView: {
 
