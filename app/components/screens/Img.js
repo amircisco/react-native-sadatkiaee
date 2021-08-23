@@ -71,7 +71,7 @@ const Img = ({ route }) => {
                     deleteSourceImages();
                 }
                 setCurrentUri(uris[0]);
-            }, 1500);
+            }, 1800);
         }
         else {
             Alert.alert("هیچ تصویری انتخاب نشده است");
