@@ -14,41 +14,51 @@ const Img = ({ route }) => {
     const [progress, setProgress] = useState(0);
     const [selectedValue, setSelectedValue] = useState("0");
     const [currentDate, setCurrentDate] = useState('');
-    const [showProgressDialog,setShowProgressDialog] = useState(false);
+    const [textProcess, setTextProcess] = useState('در حال آماده سازی.لطفا صبر کنید');
+    const [textCancel, setTextCancel] = useState('انصراف');
+    const [lodingDialog, setLodingDialog] = useState(true);
+    const [showProgressDialog, setShowProgressDialog] = useState(false);
     const refs = {};
     const updateRef = (index, el) => {
         let key = "key_" + index.toString();
         refs[key] = el;
     }
+
+    const sendData = async () => {
+        Object.entries(refs).forEach(([key, value]) => {
+            captureRef(value, {
+                format: 'jpg',
+                quality: 0.9,
+            })
+                .then(uri => {
+                    MediaLibrary.saveToLibraryAsync(uri)
+                        .then(res => {
+
+                        });
+                })
+                .catch(err => { })
+
+        });
+
+        return "ok";
+    }
     const sendImages = () => {
-        
         if (Object.entries(refs).length > 0) {
             setShowProgressDialog(true);
-            Object.entries(refs).forEach(([key, value]) => {
-                captureRef(value, {
-                    format: 'jpg',
-                    quality: 0.9,
-                })
-                    .then(uri => {
-                        MediaLibrary.saveToLibraryAsync(uri)
-                            .then(res => {
-
-                            });
-                    })
-                    .catch(err => { })
-
+            sendData().then((res)=>{
+                setLodingDialog(false);
+                setTextProcess("با موفقیت انجام شد");
+                setTextCancel("اتمام");
+                setArrImages([]);
             });
-            setShowProgressDialog(false);
-            setArrImages([]);
-            Alert.alert(Object.entries(refs).length.toString() + " تصویر با موفقیت ویرایش شد ");
         }
-        else{
+        else {
             Alert.alert("هیچ تصویری انتخاب نشده است");
         }
     }
 
 
-    const checkPerms = async() => {
+    const checkPerms = async () => {
         if (Platform.OS != 'web') {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (status !== 'granted') {
@@ -58,7 +68,7 @@ const Img = ({ route }) => {
     }
 
     useEffect(() => {
-        setCurrentDate(current_datetime("/"));        
+        setCurrentDate(current_datetime("/"));
         checkPerms();
     }, []);
 
@@ -118,7 +128,7 @@ const Img = ({ route }) => {
                                 <Text style={styles.textBtnRemove}>حذف</Text>
                             </TouchableOpacity>
                         </ImageBackground>
-                        <ScrollView>
+                        <ScrollView style={{width: allWidth - 50,alignSelf: 'center'}}>
                             <ScrollView horizontal={true}>
                                 <ViewShot ref={el => updateRef(index, el)} style={{ width: 1024, height: 768 }}>
                                     <Image source={{ uri: item.data }} style={{ width: 1024, height: 768 }}></Image>
@@ -135,14 +145,19 @@ const Img = ({ route }) => {
             <Modal onRequestClose={() => null} visible={showProgressDialog}>
                 <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center' }}>
                     <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
-                        <Text style={{ fontSize: 20 }}>در حال اماده ویرایش تصاویر
-                            <ActivityIndicator
-                                animating={true}
-                                color='#bc2b78'
-                                size="small"
-                            />                            
+                        <Text style={{ fontSize: 18, marginBottom: 20 }}>{textProcess}
+                            {
+                                lodingDialog ?
+                                    <ActivityIndicator
+                                        animating={true}
+                                        color='#bc2b78'
+                                        size="small"
+                                    />
+                                    :
+                                    <></>
+                            }
                         </Text>
-                        <Button title="انصراف" onPress={() => { setShowProgressDialog(false) }} />
+                        <Button title={textCancel} onPress={() => { setShowProgressDialog(false); setLodingDialog(true); setTextProcess("در حال آماده سازی.لطفا صبر کنید"); setTextCancel("انصراف"); }} />
                     </View>
                 </View>
             </Modal>
