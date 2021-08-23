@@ -59,7 +59,7 @@ const HomeMenu = ({ navigation, route }) => {
 
                 let oldMenuItems = [...menuItems,
                 //{ id: -1, name: 'ثبت اطلاعات بیمه گذار جدید', isLink: 0, navigate: 'newUser', link: '' },
-                { id: -1, name: 'بازدید جدید', isLink: 0, navigate: 'img', link: '' },
+                { id: -1, name: 'اماده سازی تصاویر', isLink: 0, navigate: 'img', link: '' },
                 //{ id: -2, name: 'بازدیدهای من', isLink: 0, navigate: 'mySendered', link: '' },
                 { id: -2, name: 'تنظیمات ورود', isLink: 0, navigate: 'infoLogin', link: '' },
                 { id: -3, name: 'ثبت ساعت کاری', isLink: 0, navigate: 'timeSheet', link: '' },

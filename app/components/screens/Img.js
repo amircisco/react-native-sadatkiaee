@@ -1,64 +1,77 @@
-import React, { useState, useEffect, useCallback, useRef, createRef } from 'react'
-import { Modal, ActivityIndicator, Image, StyleSheet, Text, View, ImageBackground, Alert, Platform, Button, ScrollView, Dimensions, TouchableOpacity, TextInput } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { CheckBox, Modal, ActivityIndicator, Image, StyleSheet, Text, View, ImageBackground, Alert, Platform, Button, ScrollView, Dimensions, TouchableOpacity, TextInput, PermissionsAndroid } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
-import FileSystem from 'expo-file-system';
-import ViewShot, { captureRef, releaseCapture } from "react-native-view-shot";
+import ViewShot, { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 import * as Localization from 'expo-localization';
+import { ImageBrowser } from 'expo-image-picker-multiple';
 
 
 const allWidth = Dimensions.get('window').width;
 const allHeight = Dimensions.get('window').height;
+const rowImgWidth = 250;
+const rowImgHeight = 200;
 const Img = ({ route }) => {
     const [arrImages, setArrImages] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(null);
-    const [progress, setProgress] = useState(0);
-    const [selectedValue, setSelectedValue] = useState("0");
     const [currentDate, setCurrentDate] = useState('');
-    const [textProcess, setTextProcess] = useState('در حال آماده سازی.لطفا صبر کنید');
+    const [textProcess, setTextProcess] = useState('لطفا صبر کنید');
     const [textCancel, setTextCancel] = useState('انصراف');
     const [lodingDialog, setLodingDialog] = useState(true);
     const [showProgressDialog, setShowProgressDialog] = useState(false);
-    const refs = {};
-    const [fromLeft,setFromLeft] = useState('67%');
-    const [fromBottom,setFromBottom] = useState('18%');
-    const [fontDynamic,setFontDynamic] = useState(32);
+    const [fromLeft, setFromLeft] = useState('67%');
+    const [fromBottom, setFromBottom] = useState('18%');
+    const [fontDynamic, setFontDynamic] = useState(32);
+    const [currentUri, setCurrentUri] = useState(null);
+    const refViewShot = useRef(null);
+    const [showImageBrowser, setShowImageBrowser] = useState(false);
+    const [removed, setRemoved] = useState(false);
+    let submit = function () { };
     // left 67%
     // bottom 18%
     // font 32
     // font 25
-    const updateRef = (index, el) => {
-        let key = "key_" + index.toString();
-        refs[key] = el;
-    }
 
     const sendData = async () => {
-        Object.entries(refs).forEach(([key, value]) => {
-            captureRef(value, {
-                format: 'jpg',
-                quality: 0.9,
+        captureRef(refViewShot, {
+            format: 'jpg',
+            quality: 0.9,
+        })
+            .then(uri => {
+                MediaLibrary.saveToLibraryAsync(uri)
+                    .then(res => {
+
+                    });
             })
-                .then(uri => {
-                    MediaLibrary.saveToLibraryAsync(uri)
-                        .then(res => {
-
-                        });
-                })
-                .catch(err => { })
-
-        });
-
-        return "ok";
+            .catch(err => { });
     }
     const sendImages = () => {
-        if (Object.entries(refs).length > 0) {
+        if (arrImages.length > 0) {
             setShowProgressDialog(true);
-            sendData().then((res)=>{
-                setLodingDialog(false);
-                setTextProcess("با موفقیت انجام شد");
-                setTextCancel("اتمام");
-                setArrImages([]);
+            let uris = [];
+            arrImages.map((item) => {
+                uris.push(item.uri);
             });
+
+            setCurrentUri(uris[0]);
+            let kol = uris.length;
+            let done = 1;
+            setTextProcess(parseInt((done * 100) / kol).toString() + '% لطفا صبر کنید');
+            var interval = setInterval(async () => {
+                setTextProcess(parseInt((done * 100) / kol).toString() + '% لطفا صبر کنید');
+                await sendData();
+                uris.splice(0, 1);
+                done += 1;
+                if (uris.length == 0) {
+                    clearInterval(interval);
+                    setLodingDialog(false);
+                    setTextProcess("با موفقیت انجام شد");
+                    setTextCancel("اتمام");
+                    setArrImages([]);
+                    setCurrentUri(null);
+                    deleteSourceImages();
+                }
+                setCurrentUri(uris[0]);
+            }, 1500);
         }
         else {
             Alert.alert("هیچ تصویری انتخاب نشده است");
@@ -66,21 +79,55 @@ const Img = ({ route }) => {
     }
 
 
-    const checkPerms = async () => {
-        if (Platform.OS != 'web') {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-                Alert.alert("برای کار با این بخش نیاز به دسترسی دارید.");
+    const deleteSourceImages = () => {
+        if (removed) {
+            for (let item of arrImages) {
+                try {
+                    MediaLibrary.deleteAssetsAsync(item).then(res => {
+                        //console.log("delete file", item.filename) 
+                    })
+                }
+                catch (e) {
+                    //console.log("error at deleting ", item.filename);
+                }
+
             }
+            //Alert.alert("فایل های اصلی نیز حذف شدند");
+            setTextProcess("فایل های اصلی نیز حذف شدند");
         }
+
+    }
+
+    const checkPerms = async () => {
+
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: "دسترسی به حافظه",
+                    message:
+                        "جهت ذخیره سازی اطلاعات دسترسی به حافظه نمیاز میباشد",
+                    buttonNeutral: "انصراف",
+                    buttonNegative: "نه مجاز نیست",
+                    buttonPositive: "مجاز است"
+                }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+
     }
 
     useEffect(() => {
-        if(allWidth > 360){
+
+        if (allWidth > 360) {
             setFontDynamic(25);
         }
-        if(Localization.isRTL){
-            setFromLeft("-"+fromLeft);
+        if (Localization.isRTL) {
+            setFromLeft("-" + fromLeft);
         }
         setCurrentDate(current_datetime("/"));
         checkPerms();
@@ -112,49 +159,99 @@ const Img = ({ route }) => {
 
     }
 
-    //aspect: [4, 3],
-    const selectImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: false,
-
-            quality: 1
-        });
-
-        if (!result.cancelled) {
-            setArrImages(arrImages => [...arrImages, { id: String(arrImages.length), data: result.uri, w: result.width, h: result.height }]);
-        }
+    const beforeSubmit = () => {
+        setShowImageBrowser(false);
+        submit();
     }
 
+    const imagesCallback = (callback) => {
 
+        callback.then(async (photos) => {
+            setArrImages([...arrImages, ...photos]);
+            //setArrImages(arrImages => [...arrImages, { id: String(arrImages.length), data: result.uri, w: result.width, h: result.height }]);
+        })
+            .catch((e) => console.log(e));
+    };
+
+
+    const updateHandler = (count, onSubmit) => {
+        submit = onSubmit;
+    };
+
+    const renderSelectedComponent = (number) => (
+        <View style={styles.countBadge}>
+            <Text style={styles.countBadgeText}>{number}</Text>
+        </View>
+    );
 
     return (
         <View style={styles.container}>
+            {
+                showImageBrowser ?
+                    <View style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, zIndex: 999 }}>
+                        <ImageBrowser
+                            max={100}
+                            onChange={updateHandler}
+                            callback={imagesCallback}
+                            renderSelectedComponent={renderSelectedComponent}
+                        />
+                        <View style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 9999, width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity style={{ width: '50%', padding: 10, backgroundColor: 'black', borderWidth: 1, borderColor: 'orange' }} onPress={() => setShowImageBrowser(false)}>
+                                <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }} onPress={() => setShowImageBrowser(false)}>انصراف</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ width: '50%', padding: 10, backgroundColor: 'black', borderWidth: 1, borderColor: 'orange' }} onPress={() => beforeSubmit()}>
+                                <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }} onPress={() => beforeSubmit()}>انتخاب</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    :
+                    <></>
+            }
+            <View style={{ position: 'absolute', top: 0, left: 0, padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 10, width: '100%' }}>
+                <Text style={{ color: 'black', width: '10%' }} >{arrImages.length > 0 ? arrImages.length.toString() : ''}</Text>
+                <TouchableOpacity style={{ width: '70%', backgroundColor: '#429df2', borderRadius: 6 }} onPress={() => { setShowImageBrowser(true); }} >
+                    <Text style={{ color: 'white', alignSelf: 'center', padding: 7, fontSize: 16 }}>اضافه کردن تصویر</Text>
+                </TouchableOpacity>
+                <CheckBox
+                    style={{ width: '10%' }}
+                    value={removed}
+                    onValueChange={(val) => setRemoved(val)}
+                />
 
-            <Button style={styles.btnAddImage} title="اضافه کردن تصویر" onPress={selectImage} />
-            <TextInput style={{ alignSelf: 'center', padding: 10, textAlign: 'center', width: '100%' }} onChangeText={text => setCurrentDate(text)} value={currentDate} />
+            </View>
+
+            <TextInput style={{ marginTop: 50, alignSelf: 'center', textAlign: 'center', width: '100%', padding: 8 }} onChangeText={text => setCurrentDate(text)} value={currentDate} />
+
             <ScrollView style={styles.viewScrollView}>
                 {arrImages.map((item, index) =>
                 (
                     <>
-                        <ImageBackground imageStyle={{ borderRadius: 6 }} key={item.id} source={{ uri: item.data }} style={styles.imageRow} >
-                            <TouchableOpacity style={styles.btnRemove} onPress={() => removeFromArrImages(item.id)}>
+                        <ImageBackground imageStyle={{ borderRadius: 6 }} key={item.id} source={{ uri: item.uri }} style={styles.imageRow} >
+                            <TouchableOpacity key={index} style={styles.btnRemove} onPress={() => removeFromArrImages(item.id)}>
                                 <Text style={styles.textBtnRemove}>حذف</Text>
                             </TouchableOpacity>
                         </ImageBackground>
-                        <ScrollView style={{width: allWidth - 50,alignSelf: 'center'}}>
-                            <ScrollView horizontal={true}>
-                                <ViewShot ref={el => updateRef(index, el)} style={{ width: 1024, height: 768 }}>
-                                    <Image source={{ uri: item.data }} style={{ width: 1024, height: 768 }}></Image>
-                                    <Text style={{ fontSize: fontDynamic, color: "#e89520", position: 'relative', left: fromLeft, bottom: fromBottom, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{currentDate}</Text>
-                                </ViewShot>
-                            </ScrollView>
-                        </ScrollView>
                     </>
                 )
                 )}
+                <ScrollView style={{ width: rowImgWidth, alignSelf: 'center' }}>
+                    <ScrollView horizontal={true}>
+                        <ViewShot ref={refViewShot} style={{ width: 1024, height: 768 }} options={{ format: "jpg", quality: 0.9 }}>
+                            <Image source={{ uri: currentUri }} style={{ width: 1024, height: 768 }}></Image>
+                            <Text style={{ fontSize: fontDynamic, color: "#e89520", position: 'relative', left: fromLeft, bottom: fromBottom, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 1, textShadowColor: '#000' }}>{arrImages.length > 0 ? currentDate : ''}</Text>
+                        </ViewShot>
+                    </ScrollView>
+                </ScrollView>
             </ScrollView>
-            <Button style={styles.btnSendImages} onPress={sendImages} title="آماده سازی تصاویر" />
+
+
+
+
+
+
+            <TouchableOpacity style={{ width: '100%', backgroundColor: '#429df2' }} onPress={sendImages} >
+                <Text style={{ color: 'white', alignSelf: 'center', padding: 7, fontSize: 16 }}>آماده سازی تصاویر</Text>
+            </TouchableOpacity>
 
             <Modal onRequestClose={() => null} visible={showProgressDialog}>
                 <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center' }}>
@@ -186,9 +283,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     btnAddImage: {
-        justifyContent: 'flex-start',
-        alignSelf: 'center',
-
+        width: '90%',
+        textAlign: 'center'
     },
     PickerBox: {
         width: 250,
@@ -202,12 +298,12 @@ const styles = StyleSheet.create({
 
     },
     viewScrollView: {
-        margin: 15,
+
     },
     imageRow: {
         flex: 1,
-        width: allWidth - 50,
-        height: allHeight / 3.5,
+        width: rowImgWidth,
+        height: rowImgHeight,
         alignSelf: 'center',
         margin: 5,
     },
@@ -259,6 +355,22 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    countBadge: {
+        paddingHorizontal: 8.6,
+        paddingVertical: 5,
+        borderRadius: 50,
+        position: 'absolute',
+        right: 3,
+        bottom: 3,
+        justifyContent: 'center',
+        backgroundColor: '#0580FF'
+    },
+    countBadgeText: {
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        padding: 'auto',
+        color: '#ffffff'
     },
 })
 
