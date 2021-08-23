@@ -104,7 +104,7 @@ const Img = ({ route }) => {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                 {
-                    title: "دسترسی به حافظه",
+                    title: "دسترسی نوشتن در حافظه",
                     message:
                         "جهت ذخیره سازی اطلاعات دسترسی به حافظه نمیاز میباشد",
                     buttonNeutral: "انصراف",
@@ -113,7 +113,20 @@ const Img = ({ route }) => {
                 }
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                    {
+                        title: "دسترسی خواندن از حافظه",
+                        message:
+                            "جهت ذخیره سازی اطلاعات دسترسی به حافظه نمیاز میباشد",
+                        buttonNeutral: "انصراف",
+                        buttonNegative: "نه مجاز نیست",
+                        buttonPositive: "مجاز است"
+                    }
+                );
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+                }
             }
         } catch (err) {
             console.warn(err);
