@@ -5,6 +5,7 @@ import ViewShot, { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from 'expo-media-library';
 import * as Localization from 'expo-localization';
 import { ImageBrowser } from 'expo-image-picker-multiple';
+import * as  Camera from 'expo-camera';
 
 
 const allWidth = Dimensions.get('window').width;
@@ -47,6 +48,7 @@ const Img = ({ route }) => {
     const sendImages = () => {
         if (arrImages.length > 0) {
             setShowProgressDialog(true);
+            sendData();
             let uris = [];
             arrImages.map((item) => {
                 uris.push(item.uri);
@@ -83,16 +85,13 @@ const Img = ({ route }) => {
         if (removed) {
             for (let item of arrImages) {
                 try {
-                    MediaLibrary.deleteAssetsAsync(item).then(res => {
-                        //console.log("delete file", item.filename) 
+                    MediaLibrary.deleteAssetsAsync(item).then(res => {                        
                     })
                 }
-                catch (e) {
-                    //console.log("error at deleting ", item.filename);
+                catch (e) {             
                 }
 
             }
-            //Alert.alert("فایل های اصلی نیز حذف شدند");
             setTextProcess("فایل های اصلی نیز حذف شدند");
         }
 
@@ -100,37 +99,11 @@ const Img = ({ route }) => {
 
     const checkPerms = async () => {
 
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                {
-                    title: "دسترسی نوشتن در حافظه",
-                    message:
-                        "جهت ذخیره سازی اطلاعات دسترسی به حافظه نمیاز میباشد",
-                    buttonNeutral: "انصراف",
-                    buttonNegative: "نه مجاز نیست",
-                    buttonPositive: "مجاز است"
-                }
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-                    {
-                        title: "دسترسی خواندن از حافظه",
-                        message:
-                            "جهت ذخیره سازی اطلاعات دسترسی به حافظه نمیاز میباشد",
-                        buttonNeutral: "انصراف",
-                        buttonNegative: "نه مجاز نیست",
-                        buttonPositive: "مجاز است"
-                    }
-                );
-                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
-                }
-            }
-        } catch (err) {
-            console.warn(err);
+        const status1 = await MediaLibrary.requestPermissionsAsync();
+        if (status1.granted) {
+            const status2 = await Camera.requestPermissionsAsync();
         }
+
 
     }
 
@@ -140,7 +113,7 @@ const Img = ({ route }) => {
             setFontDynamic(25);
         }
         if (Localization.isRTL) {
-            setFromLeft("-" + fromLeft);
+            setFromLeft('7%');
         }
         setCurrentDate(current_datetime("/"));
         checkPerms();
@@ -180,8 +153,7 @@ const Img = ({ route }) => {
     const imagesCallback = (callback) => {
 
         callback.then(async (photos) => {
-            setArrImages([...arrImages, ...photos]);
-            //setArrImages(arrImages => [...arrImages, { id: String(arrImages.length), data: result.uri, w: result.width, h: result.height }]);
+            setArrImages([...arrImages, ...photos]);            
         })
             .catch((e) => console.log(e));
     };
@@ -197,6 +169,12 @@ const Img = ({ route }) => {
         </View>
     );
 
+    const loaderComponent = () => {
+        return (
+            <ActivityIndicator size="large" color="black" style={{ marginTop: 200 }} />
+        )
+    }
+
     return (
         <View style={styles.container}>
             {
@@ -207,6 +185,7 @@ const Img = ({ route }) => {
                             onChange={updateHandler}
                             callback={imagesCallback}
                             renderSelectedComponent={renderSelectedComponent}
+                            preloaderComponent={loaderComponent}
                         />
                         <View style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 9999, width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity style={{ width: '50%', padding: 10, backgroundColor: 'black', borderWidth: 1, borderColor: 'orange' }} onPress={() => setShowImageBrowser(false)}>

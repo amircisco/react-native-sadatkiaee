@@ -1730,6 +1730,14 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
+"@koale/useworker@^3.2.1":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@koale/useworker/-/useworker-3.4.0.tgz#773ac623212bfaed377ff5e6cd44240ed52e40ff"
+  integrity sha512-cDGItsqyNd6SlaO+9XmDupANNNl4omjisdLcLbITdcKktlK+wpW1HwbnVjHiXBtHXQsKxxE832qVMlE/q9lmXg==
+  dependencies:
+    dequal "^1.0.0"
+    isoworker "^0.1.1"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -2963,6 +2971,11 @@ depd@~1.1.2:
   resolved "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
+dequal@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.1.tgz#dbbf9795ec626e9da8bd68782f4add1d23700d8b"
+  integrity sha512-Fx8jxibzkJX2aJgyfSdLhr9tlRoTnHKrRJuu2XHlAgKioN2j19/Bcbe0d4mFXYZ3+wpE2KVobUVTfDutcD17xQ==
+
 destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/destroy/-/destroy-1.0.4.tgz"
@@ -3141,6 +3154,16 @@ expo-asset@~8.3.3:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-camera@^11.2.2:
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-11.2.2.tgz#4df9e97e533c084caf8d88255def784c568d76f4"
+  integrity sha512-S2o79Ci4RaY7g03dZdIrcnM3dt4NmOnal6kz3TlDhQquxJ8AlUW9zHvCApHIyf682tlLjdw8OUPzSlmxyJhIjQ==
+  dependencies:
+    "@expo/config-plugins" "^3.0.0"
+    "@koale/useworker" "^3.2.1"
+    expo-modules-core "~0.2.0"
+    invariant "2.2.4"
+
 expo-constants@~11.0.1:
   version "11.0.1"
   resolved "https://registry.npmjs.org/expo-constants/-/expo-constants-11.0.1.tgz"
@@ -3154,15 +3177,6 @@ expo-error-recovery@~2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/expo-error-recovery/-/expo-error-recovery-2.2.0.tgz"
   integrity sha512-HKbu6VHAlfhoP7y+HaGJwJizoUTY2eBTBHAi1RE7l/r4sc+cAegTmwwqf/3AOR8C7VntDvuQKtW7NZIyA+62KQ==
-
-expo-file-system@^11.1.3:
-  version "11.1.3"
-  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-11.1.3.tgz#f344bd175a5f65e2a97d2d6a1fd4c8da06386639"
-  integrity sha512-FBRcD6ojrkrZiTZ8O7Fbo833HhZtkhKtLDj4RNZIMpF1i+ZBD2bmeMcfLMeRHNYcBeJno9C4AVXoNQFqDCGQDg==
-  dependencies:
-    "@expo/config-plugins" "^3.0.0"
-    expo-modules-core "~0.2.0"
-    uuid "^3.4.0"
 
 expo-file-system@~11.1.3:
   version "11.1.3"
@@ -3180,13 +3194,6 @@ expo-font@~9.2.1:
   dependencies:
     expo-modules-core "~0.2.0"
     fontfaceobserver "^2.1.0"
-
-expo-image-manipulator@^9.2.2:
-  version "9.2.2"
-  resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-9.2.2.tgz#0fc7d2032972961c0a5fb49511d230fe0788fa6f"
-  integrity sha512-rnwUpLmySEhclES+632/vl4cBQyjWE16PdR003WxvN/YBynTlYIi7If2FZRFt5lktX0Rz988XVE89EavHPn2ug==
-  dependencies:
-    expo-modules-core "~0.2.0"
 
 expo-image-picker-multiple@^1.4.1:
   version "1.4.1"
@@ -4080,6 +4087,11 @@ isomorphic-fetch@^2.1.1:
   dependencies:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
+
+isoworker@^0.1.1:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/isoworker/-/isoworker-0.1.3.tgz#a54587fa1da2f57d401565f83b1c4ee8b21ae372"
+  integrity sha512-NmguMXzoa/ixeQv373vIf+zYgqvZMqEFpMSysAQWfdNAf+TvjZQH7ZiQEk9ZKHkktfPqH74GSab4IVXda71hbw==
 
 jest-get-type@^24.9.0:
   version "24.9.0"
