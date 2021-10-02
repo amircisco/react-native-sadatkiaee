@@ -40,8 +40,9 @@ const Login = ({ route }) => {
             'mobile': mobile,
             'password': password,
         }
+
         startFetch(url,headers,data).then((respons) => {
-            if(respons != null){
+            if(respons != null){                                 
                 if (respons.status == 200 && respons.data.access !== undefined && respons.data.refresh !== undefined) {
                     storeData('mobile',mobile);
                     storeData('password',password);
@@ -66,14 +67,15 @@ const Login = ({ route }) => {
             headers: headers,
             data: data,
             }).
-            then((respons) => {                
+            then((respons) => {                               
                 resposne = respons;
             }).
-            catch((error) => {
+            catch((error) => {                 
                 console.log(error)                
             }).then(() => {
                 setIsLoading(false)                
             });
+                                   
         return resposne;    
     }
 

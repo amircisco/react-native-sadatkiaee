@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.sadatakiaee.ir",
-      "permissions":["ACCESS_FINE_LOCATION","ACCESS_COARSE_LOCATION","READ_EXTERNAL_STORAGE","WRITE_EXTERNAL_STORAGE","CAMERA"]
+      "permissions":["ACCESS_FINE_LOCATION","ACCESS_COARSE_LOCATION","READ_EXTERNAL_STORAGE","WRITE_EXTERNAL_STORAGE","CAMERA","INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

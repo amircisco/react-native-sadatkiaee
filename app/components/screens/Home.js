@@ -21,12 +21,14 @@ const Stack = createStackNavigator();
 //const server = "http://192.168.43.84";
 //const port = '8000';
 
-const server = "https://sadat-kiaee.ir";
+//const server = "https://sadat-kiaee.ir";
+const server = "http://sadat-kiaee.ir";
 const port = '443';
 
 const SERVER = server;
 const PORT = port;
-const SERVERPORT = SERVER + ':' + PORT;
+//const SERVERPORT = SERVER + ':' + PORT;
+const SERVERPORT = SERVER ;
 const SERVERINFO = {
     SERVER: SERVER,
     PORT: PORT,
